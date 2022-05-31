@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import { View, FlatList, StyleSheet, Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
+
 import Note from "./Note";
 
 class S1 extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
+            data: []
         };
         this.funkcja = null;
     }

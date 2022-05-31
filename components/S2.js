@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, TextInput, Button, StyleSheet } from "react-native";
 import * as SecureStore from "expo-secure-store";
-
+import { Picker } from '@react-native-picker/picker';
 const mies = ["sty", "lut", "mar", "kwi", "maj", "cze", "lip", "sie", "wrz", "paź", "lis", "gru"];
 
 const colors = ["#d65151", "#a5d68b", "#6454cc", "#85397e"];
@@ -12,7 +12,10 @@ class S2 extends Component {
         this.state = {
             title: "",
             desc: "",
+            cat: ""
         };
+        this.funkcja = null
+        this.cats = []
     }
 
     render() {
@@ -38,6 +41,12 @@ class S2 extends Component {
                         console.log(this.state.desc);
                     }}
                 />
+                <Picker
+                   selectedValue={this.state.cat}
+                   onValueChange={(val)=>this.setState({cat:val})}>
+                   {this.cats}
+                
+                </Picker>
                 <View style={styles.buttonContainer}>
                     <Button
                         title={"DODAJ"}
@@ -67,6 +76,29 @@ class S2 extends Component {
         console.log(a);
         this.props.navigation.navigate('notatki')
     };
+
+    componentDidMount = () => {
+        this.funkcja = this.props.navigation.addListener("focus", () => {
+            // ta funkcja wykona się za kazdym razem kiedy ekran zostanie przywrócony
+            this.loadItem();
+        });
+
+        // ta funkcja wykona się raz podczas uruchomienia ekranu
+        this.loadItem();
+    };
+
+    componentWillUnmount = () => {
+        this.funkcja();
+    };
+
+    loadItem = async()=>{
+        let items = await SecureStore.getItemAsync('cats');
+        items = JSON.parse(items)
+        this.cats = []
+        items.forEach(element => {
+            this.cats.push(<Picker.Item label={element} value={element} />)
+        })
+    }
 }
 
 const styles = StyleSheet.create({
@@ -87,5 +119,7 @@ const styles = StyleSheet.create({
 async function saveItem(key, value) {
     await SecureStore.setItemAsync(key, value);
 }
+
+
 
 export default S2;
