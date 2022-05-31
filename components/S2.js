@@ -15,7 +15,7 @@ class S2 extends Component {
             cat: ""
         };
         this.funkcja = null
-        this.cats = []
+        this.state.cats = []
     }
 
     render() {
@@ -95,9 +95,10 @@ class S2 extends Component {
     loadItem = async()=>{
         let items = await SecureStore.getItemAsync('cats');
         items = JSON.parse(items)
-        this.cats = []
+        console.log(items)
+        this.state.cats = []
         items.forEach(element => {
-            this.cats.push(<Picker.Item label={element} value={element} />)
+            this.state.cats.push(<Picker.Item label={element} value={element} />)
         })
     }
 }
