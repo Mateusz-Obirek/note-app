@@ -65,7 +65,7 @@ class EditScreen extends Component {
         let newTitle = this.state.title;
         let newDesc = this.state.desc;
         let newCat = this.state.cat
-        await saveItem(this.props.route.id, JSON.stringify({ title: newTitle, desc: newDesc, date: this.props.route.date, color: newColor, id: this.props.route.id, cat:newCat }));
+        await saveItem(this.props.route.id, JSON.stringify({ title: newTitle, desc: newDesc, date: this.props.route.date, color: this.props.route.color, id: this.props.route.id, cat:newCat }));
         this.props.navigation.navigate('notatki')
     };
 
