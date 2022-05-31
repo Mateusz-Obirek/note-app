@@ -23,7 +23,7 @@ class S1 extends Component {
                     contentContainerStyle={{ justifyContent: "center" }}
                     data={this.state.data}
                     keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => <Note item={item} removeItem={this.removeItem} />}
+                    renderItem={({ item }) => <Note item={item} removeItem={this.removeItem} editItem={this.editItem} />}
                 />
             </View>
         );
@@ -52,6 +52,10 @@ class S1 extends Component {
             { text: "NIE", onPress: () => console.log(id) },
         ]);
     };
+    editItem = (item)=>{
+        console.log(item)
+        this.props.navigation.navigate('ekran edycji', item)
+    }
     remove = async (id) => {
         let a = await SecureStore.getItemAsync("keys");
         a = JSON.parse(a);

@@ -41,7 +41,7 @@ class S2 extends Component {
                         console.log(this.state.desc);
                     }}
                 />
-                <Picker
+                <Picker style={styles.picker}
                    selectedValue={this.state.cat}
                    onValueChange={(val)=>this.setState({cat:val})}>
                    {this.cats}
@@ -67,7 +67,8 @@ class S2 extends Component {
         let newDesc = this.state.desc;
         let newColor = colors[Math.floor(Math.random() * colors.length)];
         let newId = item.length > 0 ? item[item.length - 1] * 1 + 1 : 0;
-        await saveItem(item.length.toString(), JSON.stringify({ title: newTitle, desc: newDesc, date: dateText, color: newColor, id: newId }));
+        let newCat = this.state.cat
+        await saveItem(item.length.toString(), JSON.stringify({ title: newTitle, desc: newDesc, date: dateText, color: newColor, id: newId, cat:newCat }));
         console.log(item);
         item.push(item.length);
         console.log(item.length);
@@ -114,6 +115,10 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginTop: 30,
     },
+    picker:{
+        width:'80%',
+        height: 100
+    }
 });
 
 async function saveItem(key, value) {
