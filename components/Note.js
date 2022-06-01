@@ -11,12 +11,12 @@ class Note extends Component {
                     onLongPress={() => {
                         this.props.removeItem(this.props.item.id);
                     }}
-                    onPress={()=>{
+                    onPress={() => {
                         this.props.editItem(this.props.item)
                     }}
                 >
                     <View style={styles.catContainer}>
-                        <Text style={styles.noteText}>{this.props.item.cat}</Text>
+                        <Text style={styles.category}>{this.props.item.cat}</Text>
                     </View>
                     <View style={styles.dateContainer}>
                         <Text style={styles.noteText}>{this.props.item.date}</Text>
@@ -51,6 +51,9 @@ const styles = StyleSheet.create({
     textContainer: {
         alignItems: "center",
     },
+    category: {
+        fontSize: 30
+    }
 });
 
 export default Note;

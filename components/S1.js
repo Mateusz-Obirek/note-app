@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, FlatList, StyleSheet, Alert } from "react-native";
+import { View, FlatList, StyleSheet, Alert, TextInput } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
 
@@ -9,7 +9,8 @@ class S1 extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: []
+            data: [],
+            text: ''
         };
         this.funkcja = null;
     }
@@ -17,6 +18,16 @@ class S1 extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <TextInput
+                    style={styles.textInput}
+                    underlineColorAndroid="#ffffff"
+                    placeholder="TYTUŁ..."
+                    placeholderTextColor="#d4d4d4"
+                    onChangeText={(text) => {
+                        this.setState({ text: text });
+                        this.filter()
+                    }}
+                />
                 <FlatList
                     numColumns={2}
                     style={styles.list}
@@ -52,7 +63,7 @@ class S1 extends Component {
             { text: "NIE", onPress: () => console.log(id) },
         ]);
     };
-    editItem = (item)=>{
+    editItem = (item) => {
         console.log(item)
         this.props.navigation.navigate('ekran edycji', item)
     }
@@ -82,6 +93,33 @@ class S1 extends Component {
     componentWillUnmount = () => {
         this.funkcja();
     };
+
+    filter = async () => {
+        a = await SecureStore.getItemAsync("keys");
+        a = JSON.parse(a);
+
+        console.log("getItem");
+        console.log(a);
+        let dane = [];
+        for (let i = 0; i < a.length; i++) {
+            let d = await SecureStore.getItemAsync(a[i].toString());
+            dane.push(JSON.parse(d));
+        }
+        dane = dane.filter((txt) => {
+            let len = this.state.text.length
+            if (this.state.text == '')
+                return true
+            if (this.state.text == txt.title.substring(0, len))
+                return true
+            if (this.state.text == txt.desc.substring(0, len))
+                return true
+            if (this.state.text == txt.cat.substring(0, len))
+                return true
+            return false
+        })
+        console.log(dane)
+        this.setState({ data: dane });
+    }
 }
 
 const styles = StyleSheet.create({
@@ -93,13 +131,17 @@ const styles = StyleSheet.create({
     list: {
         flex: 1,
         flexWrap: "wrap",
-        width: "100%",
         position: "absolute",
-        top: 0,
+        top: 80,
         bottom: 0,
         left: '5%',
         right: 0,
     },
+    textInput: {
+        color: "white",
+        marginTop: 30,
+    },
+
 });
 
 export default S1;

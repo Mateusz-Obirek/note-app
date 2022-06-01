@@ -12,13 +12,14 @@ class S2 extends Component {
         this.state = {
             title: "",
             desc: "",
-            cat: ""
+            cat: "",
+            cats: []
         };
         this.funkcja = null
-        this.state.cats = []
     }
 
     render() {
+        console.log(this.state.cats)
         return (
             <View style={styles.container}>
                 <TextInput
@@ -42,10 +43,10 @@ class S2 extends Component {
                     }}
                 />
                 <Picker style={styles.picker}
-                   selectedValue={this.state.cat}
-                   onValueChange={(val)=>this.setState({cat:val})}>
-                   {this.cats}
-                
+                    selectedValue={this.state.cat}
+                    onValueChange={(val) => this.setState({ cat: val })}>
+                    {this.state.cats}
+
                 </Picker>
                 <View style={styles.buttonContainer}>
                     <Button
@@ -68,9 +69,9 @@ class S2 extends Component {
         let newColor = colors[Math.floor(Math.random() * colors.length)];
         let newId = item.length > 0 ? item[item.length - 1] * 1 + 1 : 0;
         let newCat = this.state.cat
-        await saveItem(item.length.toString(), JSON.stringify({ title: newTitle, desc: newDesc, date: dateText, color: newColor, id: newId, cat:newCat }));
+        await saveItem(newId.toString(), JSON.stringify({ title: newTitle, desc: newDesc, date: dateText, color: newColor, id: newId, cat: newCat }));
         console.log(item);
-        item.push(item.length);
+        item.push(newId);
         console.log(item.length);
         await saveItem("keys", JSON.stringify(item));
         let a = await SecureStore.getItemAsync("0");
@@ -92,14 +93,18 @@ class S2 extends Component {
         this.funkcja();
     };
 
-    loadItem = async()=>{
+    loadItem = async () => {
         let items = await SecureStore.getItemAsync('cats');
         items = JSON.parse(items)
+        console.log('loading')
         console.log(items)
-        this.state.cats = []
+        let cats = []
         items.forEach(element => {
-            this.state.cats.push(<Picker.Item label={element} value={element} />)
+            cats.push(<Picker.Item label={element} value={element} key={element} />)
         })
+        console.log('cats')
+        console.log(this.state.cats)
+        this.setState({ cats: cats })
     }
 }
 
@@ -107,6 +112,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "#2b2b2b",
         height: "100%",
+
         alignItems: "center",
     },
     textInput: {
@@ -116,8 +122,8 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginTop: 30,
     },
-    picker:{
-        width:'80%',
+    picker: {
+        width: '80%',
         height: 100
     }
 });
